@@ -1,0 +1,566 @@
+{
+    "display": {
+        "width": 1280,
+        "height": 720,
+        "x": 0,
+        "y": 0,
+        "alwaysOnTop": false,
+        "borderLess": true,
+        "hideCursor": false
+    },
+
+    "settingsWindow": {
+        "width": 900,
+        "height": 900,
+        "x": 400,
+        "y": 100,
+        "alwaysOnTop": false,
+        "borderLess": false,
+        "hideCursor": false
+    },
+
+    "assetPath": "D:\\src\\projects\\Platform2015\\assets\\",
+
+    "aClassConfig": {
+        "configBool": false,
+        "configDouble": 2.2,
+        "configFloat": 1.3,
+        "configString": "fdsa",
+        "configInt": 2,
+        "configVec2i": {
+            "x": 2,
+            "y": 3
+        },
+        "configVec2f": {
+            "x": 4.5,
+            "y": 6.7
+        },
+        "configVec3f": {
+            "x": 1.2,
+            "y": 3.4,
+            "z": 5.6
+        }
+    },
+
+    "Intermission": {
+        
+		"videos" : [
+		{
+			"title": "QC Color Obsessed vs Starkey",
+            "path": "distortion/QC Color Obsessed vs Starkey - Command.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+		},
+		{
+			"title": "DreamF - Focus",
+            "path": "distortion/DreamF - Focus-SD_1.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+		},
+		{
+			"title": "Exotic Jellyfish",
+            "path": "distortion/Exotic Jellyfish.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+		},
+		{
+			"title": "Floating",
+            "path": "distortion/floating.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+		},
+		{
+			"title": "Nature",
+            "path": "distortion/Nature on Vimeo.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+        },
+		{
+			"title": "Sea",
+            "path": "distortion/sea on Vimeo.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+        },
+		{
+			"title": "The Unseen Sea",
+            "path": "distortion/The Unseen Sea on Vimeo.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+        },
+		{
+			"title": "The Aurora",
+            "path": "distortion/The Aurora on Vimeo.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+        },
+		{
+			"title": "Wyoming Wildscapes II",
+            "path": "distortion/Wyoming Wildscapes II on Vimeo.mp4",
+            "loadOption": "gstreamer",
+            "blendMode": "none",
+            "playOption": { "loop": true, "pingpong": false }
+        }
+		],
+        "smallVideoPosition": {
+            "x": 550,
+            "y": 20
+        },
+        "smallVideoWidth": 300,
+        "processingSize": {
+            "width": 1920,
+            "height": 1080
+        },
+		"blurBlockSize": 6
+    },
+
+    "Dots & Lines": {
+        "depthRotationTime": 5.0,
+        "autoplayBurstVelocityFactor": 0.0006,
+        "idleBurstVelocityFactor": 0.0003,
+        "accelerationFactor": 0.00006,
+        "accelerationTimeFactor": 0.7,
+        "maxLength": 0.035,
+        "floatingMaxLength": 0.065,
+        "maxAlpha": 1.0,
+        "depthMagnitude": 0.02,
+        "velocityDampingFactor": 0.08,
+        "contourDistance": 0.008,
+        "animationWaitTime": 20.0,
+        "pointNum": 800,
+        "windowWidth": 2.0,
+        "windowHeight": 1.0,
+		"colorSwapTime" : 1.5,
+		"colorPresets" : [
+		{
+			"title" : "Default",
+			"brighterLines" : false,
+			"gradientAngle" : -45,
+			"pointsColor" :
+			{
+				"auto" : true
+			},
+			"bg1Color" :
+			{
+				"r" : 0,
+				"g" : 0,
+				"b" : 0
+			},
+			"bg2Color" :
+			{
+				"r" : 0,
+				"g" : 0,
+				"b" : 0
+			}
+		},
+		{
+			"title" : "Gradient Set 1",
+			"brighterLines" : true,
+			"gradientAngle" : 90,
+			"pointsColor" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg1Color" :
+			{
+				"r" : 237,
+				"g" : 47,
+				"b" : 60
+			},
+			"bg2Color" :
+			{
+				"r" : 242,
+				"g" : 115,
+				"b" : 33
+			}
+		},
+		{
+			"title" : "Gradient Set 2",
+			"brighterLines" : true,
+			"gradientAngle" : 135,
+			"pointsColor" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg1Color" :
+			{
+				"r" : 27,
+				"g" : 117,
+				"b" : 187
+			},
+			"bg2Color" :
+			{
+				"r" : 236,
+				"g" : 6,
+				"b" : 119
+			}
+		},
+		{
+			"title" : "Gradient Set 3",
+			"brighterLines" : true,
+			"gradientAngle" : 45,
+			"pointsColor" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg1Color" :
+			{
+				"r" : 34,
+				"g" : 169,
+				"b" : 75
+			},
+			"bg2Color" :
+			{
+				"r" : 38,
+				"g" : 169,
+				"b" : 224
+			}
+		},
+		{
+			"title" : "Not Used",
+			"brighterLines" : true,
+			"gradientAngle" : 0,
+			"pointsColor" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg1Color" :
+			{
+				"r" : 74,
+				"g" : 38,
+				"b" : 111
+			},
+			"bg2Color" :
+			{
+				"r" : 74,
+				"g" : 38,
+				"b" : 111
+			}
+		},
+		{
+			"title" : "Black and White",
+			"brighterLines" : true,
+			"gradientAngle" : -45,
+			"pointsColor" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg1Color" :
+			{
+				"r" : 255,
+				"g" : 255,
+				"b" : 255
+			},
+			"bg2Color" :
+			{
+				"r" : 0,
+				"g" : 0,
+				"b" : 0
+			}
+		}
+		],
+        "fileList": [
+            {
+                "title": "Platform Logo",
+                "path": "line_animation/1.png"
+            },
+			{
+                "title": "Give Get Connect",
+                "path": "line_animation/givegetconnect.png"
+            },
+            {
+                "title": "Diversify",
+                "path": "line_animation/diversify.png"
+            },
+            {
+                "title": "Teach",
+                "path": "line_animation/teach.png"
+            },
+            {
+                "title": "Transform",
+                "path": "line_animation/transform.png"
+            },
+            {
+                "title": "Innovate",
+                "path": "line_animation/innovate.png"
+            },
+            {
+                "title": "Inspire",
+                "path": "line_animation/inspire.png"
+            },
+            {
+                "title": "Envision",
+                "path": "line_animation/envision.png"
+            },
+            {
+                "title": "Prosper",
+                "path": "line_animation/prosper.png"
+            },
+            {
+                "title": "Create",
+                "path": "line_animation/create.png"
+            }
+        ]
+    },
+
+    "Speaker_Overlay": {
+        "defaultFontScale": 0.7,
+
+        "speakerNames": [
+            { "name": "David Drummond", "image": "names/A_Conversation_With/1dcd.png" },
+            { "name": "Bruce Grooms", "image": "names/A_Conversation_With/2bg.png" },
+            { "name": "Emmanuel Seuge", "image": "names/A_Conversation_With/3es.png" },
+            { "name": "Jack Dorsey", "image": "names/A_Conversation_With/4jd.png" },
+
+            { "name": "Separator" },
+            { "name": "Group 01", "image": "names/Groups/group1.png", "group" : true },
+			{ "name": "John Wilson", "image": "names/Agenda 01/7jw.png" },
+			{ "name": "Gary May", "image": "names/Agenda 01/8gm.png" },
+			{ "name": "Hank Williams", "image": "names/Agenda 01/9hw.png" },
+            { "name": "Greg Gunn", "image": "names/Agenda 01/1gg.png" },
+            { "name": "Tanya VanCourt", "image": "names/Agenda 01/2tvc.png" },
+            { "name": "Lisa Gelobter", "image": "names/Agenda 01/3lg.png" },
+            { "name": "Gene Wade", "image": "names/Agenda 01/4gw.png" },
+            { "name": "Yvonne De La Peña", "image": "names/Agenda 01/5ydlp.png" },
+			{ "name": "Garikai Campbell", "image": "names/Agenda 01/6gc.png" },
+
+            { "name": "Separator" },
+            { "name": "Group 02", "image": "names/Groups/group2.png", "group" : true },
+			{ "name": "Platform Fellows", "image": "names/Groups/platform_fellow.png", "group" : true },
+            { "name": "Rafael A. Ortiz", "image": "names/Agenda 02/1rao.png" },
+            { "name": "Star Jones", "image": "names/Agenda 02/2sj.png" },
+            { "name": "Bernard A. Harris", "image": "names/Agenda 02/3bah.png" },
+            { "name": "David Moises Perez Martinez", "image": "names/Agenda 02/4dmpm.png" },
+            { "name": "Juana Mendenhall", "image": "names/Agenda 02/5jm.png" },
+
+            { "name": "Separator" },
+            { "name": "Group 03", "image": "names/Groups/group3.png", "group" : true },
+            { "name": "Andrew McAfee", "image": "names/Agenda 03/1am.png" },
+            { "name": "Lisa Gansky", "image": "names/Agenda 03/2lg.png" },
+            { "name": "Ayanna Howard", "image": "names/Agenda 03/3ah.png" },
+            { "name": "Laurence G. Latimer", "image": "names/Agenda 03/4lgl.png" },
+			{ "name": "Ty Ahmad-Taylor", "image": "names/Agenda 03/5tat.png" },
+
+            { "name": "Separator" },
+            { "name": "Group 04", "image": "names/Groups/group4.png", "group" : true },
+            { "name": "Maya A. Beasley", "image": "names/Agenda 04/1mab.png" },
+            { "name": "Aisha R. Bowe", "image": "names/Agenda 04/2arb.png" },
+            { "name": "Marlon Nichols", "image": "names/Agenda 04/4mn.png" },
+            { "name": "Laura Weidman Powers", "image": "names/Agenda 04/5lwp.png" },
+            { "name": "Denmark West", "image": "names/Agenda 04/6dw.png" },
+			{ "name": "William Crowder", "image": "names/Agenda 04/7wc.png" },
+
+            { "name": "Separator" },
+            { "name": "Group 05", "image": "names/Groups/group5.png", "group" : true },
+            { "name": "Rubi Sanchez", "image": "names/Agenda 05/1rs.png" },
+            { "name": "Jewel Burks", "image": "names/Agenda 05/2jb.png" },
+            { "name": "Guy Primus", "image": "names/Agenda 05/3gp.png" },
+            { "name": "Seth Robertson & Viet Tran", "image": "names/Agenda 05/4srvt.png" },
+			{ "name": "Carlos Watson", "image": "names/Agenda 05/5cw.png" }
+        ],
+        "fadeDuration": 0.5
+    },
+
+	"Sponsors" :
+	{
+		"fadeTime" : 2.0,
+		"autoPlayWaitTime" : 7.0,
+		"sponsorsImagesPath" : [
+			{ "path" : "sponsors/sponsors1.png" },
+			{ "path" : "sponsors/sponsors2.png" },
+			{ "path" : "sponsors/sponsors3.png" },
+            { "path" : "sponsors/sponsors4.png" }
+		]
+	},
+
+	"Active_Voice_Animation" :
+	{
+   		"depthRotationTime" : 5.0,
+		"randomVelocityFactor" : 0.005,
+		"accelerationFactor" : 0.00006,
+		"accelerationTimeFactor" : 0.7,
+		"maxLength" : 0.045,
+		"maxAlpha" : 1.0,
+		"depthMagnitude" : 0.02,
+		"velocityDampingFactor" : 0.08,
+		"contourDistance" : 0.008,
+		"animationWaitTime" : 20.0,
+
+		"inputFile" : "sound_animation/speaker.mp4",
+		"randomness" : 0.2
+	},
+
+	"Floating_Animation" :
+	{   
+		"depthRotationTime" : 5.0,
+		"animationWaitTime" : 20.0,
+		"randomVelocityFactor" : 0.005,
+		"accelerationFactor" : 0.00006,
+		"accelerationTimeFactor" : 0.7,
+		"maxLength" : 0.15,
+		"maxAlpha" : 1.0,
+		"depthMagnitude" : 0.001,
+		"velocityDampingFactor" : 0.08,
+		"contourDistance" : 0.008,
+		"animationWaitTime" : 20.0,
+
+		"windowWidth" : 2.0,
+		"windowHeight" : 1.0,
+		"minVelocity" : 0.0004,
+		"maxVelocity" : 0.0008,
+		"pointRadiusMin" : 0.001,
+		"pointRadiusMax" : 0.002
+	},
+
+	"PixelEffect1" : {
+		"videos" : [
+			{
+				"title": "QC Color Obsessed vs Starkey",
+				"path": "distortion/QC Color Obsessed vs Starkey - Command.mp4",
+				"loadOption": "gstreamer",
+				"blendMode": "none",
+				"playOption": { "loop": true, "pingpong": false }
+			},
+			{
+				"title": "DreamF - Focus",
+				"path": "distortion/DreamF - Focus-SD_1.mp4",
+				"loadOption": "gstreamer",
+				"blendMode": "none",
+				"playOption": { "loop": true, "pingpong": false }
+			},
+			{
+				"title": "Exotic Jellyfish",
+				"path": "distortion/Exotic Jellyfish.mp4",
+				"loadOption": "gstreamer",
+				"blendMode": "none",
+				"playOption": { "loop": true, "pingpong": false }
+			},
+			{
+				"title": "Speaker",
+				"path": "distortion/Speaker.mp4",
+				"loadOption": "gstreamer",
+				"blendMode": "none",
+				"playOption": { "loop": true, "pingpong": false }
+			}
+			],
+		"smallVideoPosition": {
+			"x": 550,
+			"y": 20
+		},
+		"smallVideoWidth": 300,
+		"processingSize": {
+			"width": 1920,
+			"height": 1080
+		}
+	},
+
+	"audioTemplate" : { 
+		"path" : "relativeToAssetPath", 
+		"playOption" : { "loop" : false } 
+	},
+	
+	"videoTemplate" : {
+		"path" : "relativeToAssetPath",
+		"loadOption" : "surface | texture | gstreamer | quicktime",
+		"playOption" : { "loop" : false, "pingpong" : false }
+	},
+	
+	"multimediaTemplate" : {
+		"video" : {
+			"path" : "relativeToAssetPath",
+			"loadOption" : "surface | texture | gstreamer | quicktime",
+			"blendMode" : "none | premultiply | multiply | over | add | screen", 
+			"playOption" : { "loop" : false, "pingpong" : false }
+		},
+
+		"audio" : {
+			"path" : "relativeToAssetPath",
+			"loadOption" : "surface | texture | gstreamer | quicktime",
+			"blendMode" : "none | premultiply | multiply | over | add | screen", 
+			"playOption" : { "loop" : false, "pingpong" : false }
+		},
+
+		"blendMode" : "none | premultiply | multiply | over | add | screen", 
+
+		"displayArea" : {
+			"size" : { "width" : 1, "height" : "auto" }, 
+			"position" : { "x" : 0, "y" : 0 }, 
+			"pivot" : { "x" : 0, "y" : 0 }, 
+			"rotation" : 0
+		} 
+	},
+	
+	"oldAudioTemplate" : { "path" : "relativeToAssetPath", "playOption" : { "loop" : false } },
+	
+	"oldVideoWithDisplayAreaTemplate" : 
+		{ "path" : "relativeToAssetPath", "audioPath" : "relativeToAssetPath", "loadOption" : "surface | texture | gstreamer | quicktime",
+		  "blendMode" : "none | premultiply | multiply | over | add | screen", "playOption" : { "loop" : false, "pingpong" : false },
+		  "displayArea" : {
+			 "size" : { "width" : 1, "height" : "auto" }, "position" : { "x" : 0, "y" : 0 }, 
+			 "pivot" : { "x" : 0, "y" : 0 }, "rotation" : 0
+		  } 
+	    },
+
+	"oldVideoTemplate" : 
+		{ "path" : "relativeToAssetPath", "audioPath" : "relativeToAssetPath", "loadOption" : "surface | texture | gstreamer | quicktime",
+		  "blendMode" : "none | premultiply | multiply | over | add | screen", "playOption" : { "loop" : false, "pingpong" : false }
+	    },
+
+	"cameraTemplate" : {
+		"index" : 0,
+		"size" : { "width" : 1920, "height" : 1080 },
+		"mirror" : false,
+		"properties" : {
+			"translation" : { "x" : 9.4045319774609015e-001, "y" : 5.1591063111136357e+001, "z" : -1.0590903034455167e+001 },
+			"rotation" : [ 9.9986302928375637e-001, -1.4519449534790238e-002, -7.9440705382586886e-003,
+							1.4832464114262487e-002, 9.9905415759338856e-001, 4.0875276190674679e-002,
+							7.3430701895913896e-003, -4.0987507615998071e-002, 9.9913267564404040e-001	],
+			"verticalFov" : 39.2404,
+			"aspectRatio" : 1.7778,
+			"nearPlane" : 0.1,
+			"farPlane" : 10000,
+			"offsetInPercent" : { "x" : 0.0, "y" : 0.0 }
+		}
+	},
+
+	"cameraTemplateWithoutProperties" : {
+		"index" : 0,
+		"size" : { "width" : 1920, "height" : 1080 },
+		"mirror" : false
+	},
+
+	"kinectTemplate" : {
+		"index" : 0,
+		"rangeInMm" : { "min" : 50, "max" : 4000 },
+		"mirror" : true,
+		"oniFile" : "",
+		"motor" : false
+	},
+	
+	"averCaptureTemplate" : { 
+		"width" : 1920, "height" : 1080,
+		"progressive" : true,
+		"inputType" : "hd | sd",
+		"flip" : {"horizontal" : false, "vertical" : false},
+		"rotate" : "none | cw90 | ccw90",
+		"deinterlace" : "none | bob | blend | weave" 
+	}
+	
+}

@@ -1,0 +1,68 @@
+{
+   "Active_Voice_Animation" : {
+      "maxLoudness" : 10.0,
+      "speedFactor" : 0.004000000189989805
+   },
+   "Intermission" : {
+        "blockWidth": 20.0,
+        "blockHeight": 20.0,
+        "linesAngle" : 45,
+        "lineEffect" :  true,
+		"blurAmount" : 5.0
+   },
+   "PixelEffect1" : {
+        "blockWidth": 20.0,
+        "blockHeight": 20.0,
+		"useShader" : true,
+        "triangleEffect" :  true,
+		"motionBlurFactor" : 1,
+		"border" : 5,
+		"cutMeanThreshold":	5,
+		"colorShade" : 1
+   },
+   "Floating_Animation" : {
+      "numPoints" : 140
+   },
+	"Dots & Lines" : {
+		"displayOffset" : { "x" : 0 , "y" : 0 } ,
+		"gradientAngle" : 45,
+		"autoPlay" : false,
+		"brighterLines" : false,
+		"colorSolid" : false
+	},
+	"Sponsors" :
+	{
+		"autoPlay" : true
+	},
+   "Speaker_Overlay" :
+   {
+		"fontSize" : 100,
+		"textPosition" : 
+		{
+			"x" : 20,
+			"y" : 20
+		},
+		"transparentText" : true
+   },
+
+   "aClassParams" : {
+      "paramsBool" : true,
+      "paramsDouble" : -1.80,
+      "paramsFloat" : 2.299999952316284,
+      "paramsInt" : 2,
+      "paramsString" : "qwer",
+      "paramsVec2f" : {
+         "x" : -1.50,
+         "y" : 8.699999809265137
+      },
+      "paramsVec2i" : {
+         "x" : 2,
+         "y" : -1
+      },
+      "paramsVec3f" : {
+         "x" : 0.7000002264976502,
+         "y" : 8.829999923706055,
+         "z" : -10.94000053405762
+      }
+   }
+}

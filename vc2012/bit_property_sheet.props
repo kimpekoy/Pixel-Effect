@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <BIT_CINDER_VERSION>0.8.6</BIT_CINDER_VERSION>
+    <BIT_OPENNI_VERSION>1.5.2.23</BIT_OPENNI_VERSION>
+    <BIT_NITE_VERSION>1.5.2.21</BIT_NITE_VERSION>
+    <BIT_OPENCV_VERSION>2.4.6</BIT_OPENCV_VERSION>
+    <BIT_PCL_VERSION>1.6</BIT_PCL_VERSION>
+    <BIT_PQClient_VERSION>2008-12-19</BIT_PQClient_VERSION>
+    <BIT_SDL_VERSION>1.2.15</BIT_SDL_VERSION>
+    <BIT_SDL_MIXER_VERSION>1.2.12</BIT_SDL_MIXER_VERSION>
+    <BIT_APP_VERIFY_DAYS>60</BIT_APP_VERIFY_DAYS>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="BIT_CINDER_VERSION">
+      <Value>$(BIT_CINDER_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_OPENNI_VERSION">
+      <Value>$(BIT_OPENNI_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_NITE_VERSION">
+      <Value>$(BIT_NITE_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_OPENCV_VERSION">
+      <Value>$(BIT_OPENCV_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_PCL_VERSION">
+      <Value>$(BIT_PCL_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_PQClient_VERSION">
+      <Value>$(BIT_PQClient_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_SDL_VERSION">
+      <Value>$(BIT_SDL_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_SDL_MIXER_VERSION">
+      <Value>$(BIT_SDL_MIXER_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BIT_APP_VERIFY_DAYS">
+      <Value>$(BIT_APP_VERIFY_DAYS)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

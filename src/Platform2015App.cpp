@@ -1,0 +1,507 @@
+#include "cinder/app/AppNative.h"
+#include "cinder/app/AppBasic.h"
+#include "cinder/gl/gl.h"
+#include "cinder/params/Params.h"
+#include "cinder/Surface.h"
+#include "cinder/gl/Texture.h"
+#include "cinder/Font.h"
+#include "cinder/app/AppImplMsw.h"
+#include "boost/thread/mutex.hpp"
+#include "cinder/MayaCamUI.h"
+
+#if defined(WIN32) && !defined(_DEBUG)
+#include "AppVerify.h"
+#endif
+
+#include "Config.h"
+#include "Debug.h"
+#include "BitException.h"
+#include "BitExceptionHandler.h"
+#include "BitShortcutKey.h"
+#include "Animation.h"
+#include "VertexConnectionAnimation.h"
+#include "DistortionAnimation.h"
+#include "SpeakerOverlayAnimation.h"
+#include "SponsorDisplay.h"
+#include "PixelEffect1.h"
+
+//#include "SoundAnimation.h"
+//#include "BrownianPointAnimation.h"
+
+#include "AClass.h"
+
+using namespace ci;
+using namespace ci::app;
+using namespace std;
+
+#define CAM_DISTANCE 1.5f
+
+//#define IMAGE_DISPLAY
+//#define AUTO_CAMERA
+#define CAM_SWAY_TIME 20.0f
+#define CAM_SWAY_AMOUNT 5.0f
+
+#define FADE_TIME 2.f
+
+/*
+#define CAM_DISTANCE 15.0f
+
+#define AUTO_CAMERA
+#define CAM_SWAY_TIME 20.0f
+#define CAM_SWAY_AMOUNT 8.0f
+*/
+
+class Platform2015App : public AppNative {
+public:
+	void prepareSettings(Settings *settings);
+	void setup();
+	void shutdown();
+	void mouseDown(MouseEvent event);
+	void keyDown(KeyEvent event);
+	void mouseDrag(MouseEvent event);
+	void update();
+	void draw();
+	void emitClose();
+	
+private:
+#if defined(WIN32) && !defined(_DEBUG)
+	AppVerify  appVerify_;
+#endif
+	void toggleFullscreen();
+	void toggleDisplayParameters();
+	void checkExceptionFromThread();
+
+	//Settings window
+	void createSettingsWindow();
+	void hideSettingsWindow();
+	void drawMainWindow();
+	void drawSettingsWindow();
+
+	//void setBlankScreen();
+	//void setDotsLinesAnimation();
+	//void setSoundAnimation();
+	//void setBrownianPointAnimation();
+	//void setVideoDistortionAnimation();
+
+	void setAnimation(int index);
+
+	Bit::Config config_;
+	Bit::Config::DisplayConfig settingsWindowConfig_;
+	
+	bool      borderless_;
+
+	app::WindowRef settingsWindow_;
+	
+	// debugging values
+	bool      debug_;
+	bool      paramsOn_;
+	Bit::ShortcutKey shortcutKey_;
+	bool setupCompleted_;
+	bool showSpeakerName_;
+	
+	//fade animation
+	gl::Fbo	frameBuffer_;
+	ci::Surface previousAnimation_;
+	float animationStartTime_;
+
+	AClass aClass_;
+
+	Animation* animation_;
+	std::vector<Animation*> animations_;
+	std::string currentMode_;
+	SpeakerOverlayAnimation speakerOverlayAnimation_;
+
+	int currentAnimationIndex_;
+
+	MayaCamUI mayaCam_;
+};
+
+void Platform2015App::prepareSettings( Settings *settings )
+{
+#if defined(WIN32) && !defined(_DEBUG)
+	//if( !appVerify_.isValid() ) {
+	//	showCursor();
+	//	MessageBox( NULL, L"Application has expired.", L"ERROR", MB_OK );	
+	//	exit( 1 );
+	//}
+#endif
+
+	// initialize debugging values
+	debug_ = false;
+	paramsOn_ = false;
+	setupCompleted_ = false;
+
+	try {
+		// register shutdown function to exception handler
+		Bit::ExceptionHandler::registerShutdownFunction(std::bind(&Platform2015App::emitClose, this));
+		// read settings for window setup
+		config_.readConfig();
+		Bit::Config::DisplayConfig appConfig = config_.getDisplayConfig();
+		// setup window 
+		settings->setWindowSize(appConfig.windowSize.x, appConfig.windowSize.y);
+		settings->setWindowPos(appConfig.windowPos.x, appConfig.windowPos.y);
+		settings->setAlwaysOnTop(appConfig.alwaysOnTop);
+		settings->setBorderless(appConfig.borderless);
+		borderless_ = appConfig.borderless;
+
+		// setup cursor
+		if (appConfig.hideCursor)
+			hideCursor();
+		else
+			showCursor();
+	}
+	catch (std::exception& e) {
+		Bit::ExceptionHandler::handleException(&e);
+	}
+}
+
+void Platform2015App::setup()
+{
+	// setup shortcut keys
+	shortcutKey_.setupDisplayDialog("Shortcut list", Vec2i(400, 200), ColorA(0.3f, 0.3f, 0.3f, 0.4f));
+	shortcutKey_.addShortcut(KeyEvent::KEY_ESCAPE, std::bind(&Platform2015App::emitClose, this), "close application");
+	shortcutKey_.addShortcut('d', &debug_, "toggle display debug mode");
+	//shortcutKey_.addShortcut('f', std::bind(&Platform2015App::toggleFullscreen, this), "toggle fullscreen mode");
+	//shortcutKey_.addShortcut('p', std::bind(&Platform2015App::toggleDisplayParameters, this), "toggle display parameters dialog");
+	//shortcutKey_.addShortcut(KeyEvent::KEY_F1, std::bind(&Bit::ShortcutKey::toggleDisplay, &shortcutKey_), "toggle display shortcut keys list");
+	shortcutKey_.addShortcut('s', std::bind(&Platform2015App::createSettingsWindow, this), "show settings window");
+	shortcutKey_.addShortcut('h', std::bind(&Platform2015App::hideSettingsWindow, this), "hide settings window");
+	
+	try {
+
+		gl::Fbo::Format msaaFormat;
+		msaaFormat.setSamples(5);
+		animationStartTime_ = 0;
+		currentAnimationIndex_ = 0;
+
+		frameBuffer_ = gl::Fbo(app::getWindowWidth(), app::getWindowHeight(), msaaFormat);
+		CameraPersp cam;
+		cam.setPerspective(30.f, 1920.f / 1080.f, 0.1f, 10000.f);
+		cam.setEyePoint(Vec3f(0, 0, CAM_DISTANCE));
+		cam.lookAt(Vec3f(0, 0, 0.f));
+		mayaCam_.setCurrentCam(cam);
+
+		settingsWindowConfig_ = config_.getDisplayConfig("settingsWindow");
+		createSettingsWindow();
+
+		config_.setup("Settings", Vec2f(500, 900) - Vec2i(30, 50));
+
+		// setup everything here
+		//config_.readConfigurableConfig(aClass_, "aClassConfig");	// this will eventually calls AClass::readConfig() with the Bit::JsonTree* node named "aClassConfig" as argument
+		//config_.readConfigurableParams(aClass_, "aClassParams");	// this will eventually calls AClass::readParams() with the Bit::JsonTree* node named "aClassParams" as argument
+
+		animations_.push_back(NULL);
+		animations_.push_back(new DistortionAnimation());
+		animations_.push_back(new VertexConnectionAnimation());
+		animations_.push_back(new SponsorDisplay());		
+		animations_.push_back(new PixelEffect1());
+		
+		//Add spaces to the name to avoid naming collision
+		currentMode_ = "Blank Screen";
+		showSpeakerName_ = false;
+		((ci::params::InterfaceGl)(*config_.getParamsRef())).addParam("Current Mode ", &currentMode_, "group='Mode'", true);
+		config_.getParamsRef()->addButton("Blank Screen ", std::bind(&Platform2015App::setAnimation, this, 0), "group='Mode'");
+		config_.getParamsRef()->addButton("Intermission ", std::bind(&Platform2015App::setAnimation, this, 1), "group='Mode'");
+		config_.getParamsRef()->addButton("Dots & Lines ", std::bind(&Platform2015App::setAnimation, this, 2), "group='Mode'");
+		config_.getParamsRef()->addButton("Sponsors ", std::bind(&Platform2015App::setAnimation, this, 3), "group='Mode'");
+		config_.getParamsRef()->addButton("PixelEffect1 ", std::bind(&Platform2015App::setAnimation, this, 4), "group='Mode'");
+		((ci::params::InterfaceGl)(*config_.getParamsRef())).addParam("Show Speaker Name", &showSpeakerName_).group("Mode");
+		
+		for (int i = 0; i < animations_.size(); i++)
+		{
+			if (animations_[i])
+			{
+				if (animations_[i]->getConfigName().length() > 0)
+					config_.readConfigurableConfig(*animations_[i], animations_[i]->getConfigName());
+				if (animations_[i]->getParamsName().length() > 0)
+					config_.readConfigurableParams(*animations_[i], animations_[i]->getParamsName());
+				animations_[i]->setup();
+			}				
+		}
+
+		config_.readConfigurableConfig(speakerOverlayAnimation_, speakerOverlayAnimation_.getConfigName());
+		config_.readConfigurableParams(speakerOverlayAnimation_, speakerOverlayAnimation_.getParamsName());
+		speakerOverlayAnimation_.setup();
+
+		animation_ = NULL;
+
+		config_.getParamsRef()->setOptions("", "valueswidth=200 resizable=false movable=false fontsize=2");
+
+		// mark setup complete at the end of setup.
+		setupCompleted_ = true;
+	}
+	catch (std::exception& e) {
+		Bit::ExceptionHandler::handleException(&e);
+	}
+}
+
+void Platform2015App::emitClose()
+{
+	// if setup is donw (we have window), emit the same event like clicking windows' close button (X button) on upper right corner
+	// TODO: we need to handle multiple windows later
+	if (setupCompleted_){
+		WindowImplMsw* impl = reinterpret_cast<WindowImplMsw*>(::GetWindowLongPtr((HWND)ci::app::getWindow()->getNative(), GWLP_USERDATA));
+		impl->getWindow()->emitClose();
+		impl->privateClose();
+		delete impl;
+		// quit will call shutdown() for clean up and close the app
+		quit();
+	}
+	else{	// otherwise, simply exit
+		exit(Bit::Exception::getExitCode());
+	}
+}
+
+void Platform2015App::shutdown()
+{
+	//int exitCode = Bit::Exception::getExitCode();
+	//exit( exitCode );	// we can not exit() here as memory leaks will occur
+}
+
+void Platform2015App::toggleFullscreen()
+{
+	setFullScreen(!isFullScreen());
+}
+
+void Platform2015App::toggleDisplayParameters()
+{
+	paramsOn_ = !paramsOn_;
+	if (paramsOn_) {
+		showCursor();
+
+		config_.showParams();
+	}
+	else {
+		hideCursor();
+
+		config_.hideParams();
+	}
+}
+
+void Platform2015App::keyDown( KeyEvent event )
+{
+	shortcutKey_.keyDown(event);
+}
+
+void Platform2015App::mouseDown( MouseEvent event )
+{
+	//mayaCam_.mouseDown(event.getPos());
+}
+
+void Platform2015App::mouseDrag(MouseEvent event)
+{
+	//mayaCam_.mouseDrag(event.getPos(), event.isLeftDown(), event.isMiddleDown(), event.isRightDown());
+}
+
+void Platform2015App::update()
+{
+	try {
+		// check if there is any exception from thread, for more info see Bit::ExceptionHandler::checkExceptionFromThread
+		Bit::ExceptionHandler::checkExceptionFromThread();
+		
+		// added update part here
+
+		////auto rotate
+		//if (ci::app::getElapsedSeconds() - animationStartTime_ > 20.0)
+		//{
+		//	setAnimation((currentAnimationIndex_ + 1) % animations_.size());
+		//}
+
+		if(animation_)
+			animation_->update();
+
+		speakerOverlayAnimation_.setVisible(showSpeakerName_);
+		speakerOverlayAnimation_.update();
+
+#ifdef AUTO_CAMERA
+		float time = fmod(ci::app::getElapsedSeconds(), CAM_SWAY_TIME);
+		float eyex;
+
+		if (time < CAM_SWAY_TIME / 4)
+		{
+			eyex = -CAM_SWAY_AMOUNT * time / (CAM_SWAY_TIME / 4);
+		}
+		else if (CAM_SWAY_TIME / 4 < time && time < CAM_SWAY_TIME * 3 / 4)
+		{
+			eyex = -CAM_SWAY_AMOUNT + 2 * CAM_SWAY_AMOUNT * (time - (CAM_SWAY_TIME / 4)) / (CAM_SWAY_TIME / 2);
+		}
+		else if (CAM_SWAY_TIME * 3 / 4 < time)
+		{
+			eyex = CAM_SWAY_AMOUNT - CAM_SWAY_AMOUNT * (time - (CAM_SWAY_TIME * 3 / 4)) / (CAM_SWAY_TIME / 4);
+		}
+
+		CameraPersp cam;
+		cam.setPerspective(30.f, 1920.f / 1080.f, 0.1f, 10000.f);
+		cam.setEyePoint(Vec3f(eyex, 0, CAM_DISTANCE));
+		cam.lookAt(Vec3f(0, 0, 0.f));
+		mayaCam_.setCurrentCam(cam);
+#endif
+	}
+	catch (std::exception& e) {
+		Bit::ExceptionHandler::handleException(&e);
+	}
+}
+
+void Platform2015App::drawMainWindow()
+{
+	frameBuffer_.bindFramebuffer();
+
+	// clear out the window with black
+	gl::clear(Color(0, 0, 0));
+	gl::color(ColorAf::white());
+
+	// draw everything here
+	gl::pushMatrices();
+	gl::enableAlphaBlending();
+
+	if (animation_ && !animation_->is2D())
+		gl::setMatrices(mayaCam_.getCamera());
+
+	if (animation_)
+		animation_->draw();
+
+	gl::disableAlphaBlending();
+	gl::popMatrices();
+
+	// all debugging things 
+
+	if (debug_) {
+		// draw fps
+		gl::drawString(toString(getAverageFps()), Vec2f(10, 10), ColorA(0.3f, 0.3f, 0.7f, 1.0f), Font("Arial", 30));
+	}
+
+	//if (paramsOn_) {
+	//	config_.drawParams();
+	//}
+
+	// draw all shortcut keys to dialog
+	shortcutKey_.draw();
+
+	frameBuffer_.unbindFramebuffer();
+
+	gl::clear();
+	gl::pushMatrices();
+	gl::translate(0, app::getWindowHeight());
+	gl::scale(1, -1);
+
+	float ratio = (app::getElapsedSeconds() - animationStartTime_) / FADE_TIME;
+
+		if (ratio < 1.0)
+		{
+			gl::color(ColorAf(1, 1, 1, ratio));
+			gl::draw(frameBuffer_.getTexture());
+
+			if (previousAnimation_)
+			{
+				gl::enableAlphaBlending();
+				gl::color(ColorAf(1, 1, 1, 1 - ratio));
+				gl::draw(previousAnimation_);
+				gl::disableAlphaBlending();
+			}
+		}
+		else
+		{
+			gl::enableAlphaBlending(true);
+			gl::color(ColorAf(1, 1, 1, 1));
+			gl::draw(frameBuffer_.getTexture());
+			gl::disableAlphaBlending();
+		}
+	
+	gl::popMatrices();
+
+	//Draw speaker names
+	speakerOverlayAnimation_.draw();
+}
+
+void Platform2015App::drawSettingsWindow()
+{
+	gl::clear(Color::black());
+	
+	if (dynamic_cast<const DistortionAnimation*>(animation_) != NULL)
+	{
+		((DistortionAnimation*)(animation_))->drawSmallVideo();
+	}
+	if (dynamic_cast<const PixelEffect1*>(animation_) != NULL)
+	{
+		((PixelEffect1*)(animation_))->drawSmallVideo();
+	}
+
+
+	config_.showParams();
+	config_.drawParams();
+}
+
+void Platform2015App::draw()
+{
+	if (!setupCompleted_)
+		return;
+
+	if (settingsWindow_ == getWindow())
+		drawSettingsWindow();
+	else
+		drawMainWindow();
+}
+
+void Platform2015App::createSettingsWindow()
+{
+	if (!settingsWindow_) {
+		settingsWindow_ = createWindow(Window::Format().size(settingsWindowConfig_.windowSize.x, settingsWindowConfig_.windowSize.y).resizable(false));
+		settingsWindow_->setTitle("Settings");
+		settingsWindow_->setPos(settingsWindowConfig_.windowPos);
+		settingsWindow_->setAlwaysOnTop(settingsWindowConfig_.alwaysOnTop);
+		settingsWindow_->setBorderless(settingsWindowConfig_.borderless);
+
+		int uniqueId = getNumWindows();
+		settingsWindow_->getSignalClose().connect(
+			[uniqueId, this] {
+			this->settingsWindowConfig_.alwaysOnTop = this->settingsWindow_->isAlwaysOnTop();
+			this->settingsWindowConfig_.borderless = this->settingsWindow_->isBorderless();
+			this->settingsWindowConfig_.windowSize = this->settingsWindow_->getSize();
+			this->settingsWindowConfig_.windowPos = this->settingsWindow_->getPos();
+			this->settingsWindow_ = NULL;
+		}
+		);
+	}
+	else
+		settingsWindow_->show();
+}
+
+void Platform2015App::hideSettingsWindow()
+{
+	settingsWindow_->hide();
+}
+
+void Platform2015App::setAnimation(int index)
+{
+	if (animation_)
+		animation_->stop();
+
+	currentAnimationIndex_ = index;
+	previousAnimation_ = ci::Surface(frameBuffer_.getTexture());
+	animationStartTime_ = app::getElapsedSeconds();
+	animation_ = animations_[index];
+	if (animation_)
+		animation_->reset();
+
+	switch (index)
+	{
+		case 0:
+			currentMode_ = "Blank Screen";
+			break;
+		case 1:
+			currentMode_ = "Intermission";
+			break;
+		case 2:
+			currentMode_ = "Dots & Lines";
+			break;
+		case 3:
+			currentMode_ = "Sponsors";
+			showSpeakerName_ = false;
+			break;
+		case 4:
+			currentMode_ = "PixelEffect1";
+			break;
+	}
+}
+
+CINDER_APP_NATIVE(Platform2015App, RendererGl)
